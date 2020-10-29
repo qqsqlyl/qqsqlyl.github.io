@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>404 | 饼干的个人博客</title>
+  <title>记一次ThinkPHP3.2.3 渗透 | 饼干的个人博客</title>
   <meta name="keywords" content="">
-  <meta name="description" content="404 | 饼干的个人博客">
+  <meta name="description" content="记一次ThinkPHP3.2.3 渗透 | 饼干的个人博客">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta property="og:type" content="website">
 <meta property="og:title" content="404">
@@ -197,24 +197,32 @@
 </aside>
 <div id="post">
     <div class="pjax">
-        <article id="page-" class="article article-type-page" itemscope itemprop="blogPost">
+        <article id="post-web/记一次thinkPHP3.2.3渗透" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">404</h1>
+        <h1 class="article-title">记一次ThinkPHP3.2.3 渗透</h1>
     
     <div class="article-meta">
         
         
+        
+        <span class="book">
+            <i class="iconfont icon-category"></i>
+            
+            
+            <a  data-rel="web">web</a>
+            
+        </span>
         
         
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2020-10-14 22:53:40'>2020-10-14 22:42</time>
+            发布时间 : <time class="date" title='最后更新: 2020-10-29 13:02:37'>2020-10-25 22:03</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:0</span>
+        <span>字数:324</span>
         
         
         
@@ -222,7 +230,7 @@
     
     <div class="toc-ref">
     
-        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x1%EF%BC%9A%E7%AE%80%E5%8D%95%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E4%B8%80%E6%B3%A2%EF%BC%9A"><span class="toc-text">0x1：简单信息收集一波：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x2%EF%BC%9A%E5%89%8D%E5%8F%B0%E9%80%9B%E4%BA%86%E4%B8%80%E5%9C%88-%E6%AF%AB%E6%97%A0%E6%94%B6%E8%8E%B7-%EF%BC%9A"><span class="toc-text">0x2：前台逛了一圈 毫无收获 ：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x3-getshell"><span class="toc-text">0x3: getshell:</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99%EF%BC%9Ahttps-blog-ccreater-top-2020-09-21-2020-QWB-final-bjyadmin"><span class="toc-text">参考资料：https:&#x2F;&#x2F;blog.ccreater.top&#x2F;2020&#x2F;09&#x2F;21&#x2F;2020-QWB-final-bjyadmin&#x2F;</span></a>
     
 <style>
     .left-col .switch-btn,
@@ -238,7 +246,50 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <h2 id="0x1：简单信息收集一波："><a href="#0x1：简单信息收集一波：" class="headerlink" title="0x1：简单信息收集一波："></a>0x1：简单信息收集一波：</h2><p><img src="https://i.loli.net/2020/10/25/rsKh3LvaDdlTXjM.png"></p>
+<p>端口开放情况：确定为宝塔环境(宝塔一般开放888 8888端口) 没有 WAF</p>
+<p><img src="https://i.loli.net/2020/10/25/bTaBEUOJRrM7d81.png" alt="简单端口探测"></p>
+<p>顺手测试宝塔phpmyadmin未授权：不存在</p>
+<pre><code>POC:http://127.0.0.1:888/pma</code></pre>
+<p><img src="https://i.loli.net/2020/10/25/548nsRyF2GjHY9h.png" alt="宝塔phpmyadmin未授权访问 测试"></p>
+<h2 id="0x2：前台逛了一圈-毫无收获-："><a href="#0x2：前台逛了一圈-毫无收获-：" class="headerlink" title="0x2：前台逛了一圈 毫无收获 ："></a>0x2：前台逛了一圈 毫无收获 ：</h2><p><img src="https://i.loli.net/2020/10/25/mblMaOD12TBH6xv.png"></p>
+<p>猜目录发现是 thinkPHP3.2.3:</p>
+<p><img src="https://i.loli.net/2020/10/25/yZjKlHbiMpCUmwO.png"></p>
+<p>尝试日志文件：</p>
+<pre><code>ThinkPHP3：/Runtime/Logs/Admin/20_08_17.log（年份前2位_月份_日.log）(Linux 区分大小写)
+
+          /Runtime/Logs/Home/20_08_17.log
+
+ThinkPHP5：/runtime/log/202008/17.log（./runtime/log/年月/日.log）
+
+或者：
+data/runtime/Logs/Admin/18_05_09.log</code></pre>
+<p>存在当日日志文件：</p>
+<p><img src="https://i.loli.net/2020/10/25/DfnvWmH9KVtqOFg.png"></p>
+<p>查找管理员登录后台地址&amp;账号密码：</p>
+<p><img src="https://i.loli.net/2020/10/25/w6VUYiJI1Rqmyfo.png"></p>
+<p>解密：</p>
+<p><img src="https://i.loli.net/2020/10/25/actENUkWK6DGTL1.png"></p>
+<p>杀入后台：</p>
+<p><img src="https://i.loli.net/2020/10/25/VjDY3Lc2FdxukRJ.png"></p>
+<h2 id="0x3-getshell"><a href="#0x3-getshell" class="headerlink" title="0x3: getshell:"></a>0x3: getshell:</h2><p>第一处上传点无法上传：</p>
+<p><img src="https://i.loli.net/2020/10/25/MxcNUAvnSiICm4K.png"></p>
+<p>第二处上传点无法突破上传shell：</p>
+<p><img src="https://i.loli.net/2020/10/25/JxoswkTbUcEa6Ch.png"></p>
+<p>此时发现管理员列表一处异常(有人利用xss漏洞 隐藏一个管理员 隐藏后门小技巧)：</p>
+<p><img src="https://i.loli.net/2020/10/25/OEcVI12xoaLQUGR.png"></p>
+<p>查找日志确实如此：</p>
+<p><img src="https://i.loli.net/2020/10/25/VunOIsxEhZtqUoG.png"></p>
+<p>没办法了 回头重新梳理一遍发现 是 bjyadmin 框架：</p>
+<p><img src="https://i.loli.net/2020/10/25/R2LhwjIeNYTBymU.png"></p>
+<p>于是Google了一下这个CMS漏洞：参考了在片文章：<a target="_blank" rel="noopener" href="https://blog.ccreater.top/2020/09/21/2020-QWB-final-bjyadmin/">https://blog.ccreater.top/2020/09/21/2020-QWB-final-bjyadmin/</a></p>
+<p><img src="https://i.loli.net/2020/10/25/sGPwUbluomJVFeE.png"></p>
+<pre><code>POC: http://127.0.0.1/index.php/Home.php?m=Home&amp;c=Vue&amp;a=Upload/Goods//thumb/5f957a4874b07.png</code></pre>
+<p>思路：上传一张图片马 进行包含执行：</p>
+<p><img src="https://i.loli.net/2020/10/25/RF89idoX6uYJT7w.png"></p>
+<p>getshell：</p>
+<p><img src="https://i.loli.net/2020/10/25/nKFGrlC6OX72byg.png"></p>
+<h1 id="参考资料：https-blog-ccreater-top-2020-09-21-2020-QWB-final-bjyadmin"><a href="#参考资料：https-blog-ccreater-top-2020-09-21-2020-QWB-final-bjyadmin" class="headerlink" title="参考资料：https://blog.ccreater.top/2020/09/21/2020-QWB-final-bjyadmin/"></a>参考资料：<a target="_blank" rel="noopener" href="https://blog.ccreater.top/2020/09/21/2020-QWB-final-bjyadmin/">https://blog.ccreater.top/2020/09/21/2020-QWB-final-bjyadmin/</a></h1>
       
        <hr><span style="font-style: italic;color: gray;"> 文章部分来源网络，欢迎指出任何有错误或不够清晰的表达。 </span>
     </div>
